@@ -75,9 +75,9 @@
       this.$message.success("登录成功!!!");
       this.$router.push({path: "/"});
     },
-    resetForm(formName) {
+    /* resetForm(formName) {
       this.$refs[formName].resetFields();
-    }
+    } */
   }
   }
 </script>
