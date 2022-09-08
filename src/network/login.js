@@ -1,8 +1,12 @@
 import { request } from "./request";
 
-export function getLogindata(){
+export function getLogindata(username,password){
     return request({
         method:'POST',
-        url:'/doLogin'
+        url:'/api/doLogin',
+        data:{
+          username:username,
+          password:password
+        }
     })
 }
