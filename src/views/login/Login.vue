@@ -10,28 +10,32 @@
       <el-form-item label="密码" prop="pass">
         <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
       </el-form-item>
-
+      <el-form-item label="验证码">
+        <el-input type="text" autocomplete="off"></el-input><img src="" alt="">
+      </el-form-item>
       <el-form-item>
         <!-- <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
         <el-button @click="resetForm('ruleForm')">重置</el-button> -->
         <el-button class="login-btn" type="primary" @click="submitForm('ruleForm')">登录</el-button>
       </el-form-item>
-      
-        <el-form-item>
-          <ul class="login-tips">
-            <li><a href="javascript:;">忘记密码</a></li>
-            <li><a href="javascript:;">新生注册</a></li>
-          </ul>
-        </el-form-item>
-      
+
+      <el-form-item>
+        <ul class="login-tips">
+          <li><a href="javascript:;">忘记密码</a></li>
+          <li><a href="javascript:;">新生注册</a></li>
+        </ul>
+      </el-form-item>
+
     </el-form>
   </div>
 </template>
 
 <script>
-  // import axios from 'axios'
-  export default {
-    name: "login",
+import { getLogindata } from '@/network/login'
+export default {
+  name: "login",
+  components: {
+  },
   data() {
     var validatePass = (rule, value, callback) => {
       if (value === '') {
@@ -66,60 +70,81 @@
         //   { validator: checkAge, trigger: 'blur' }
         // ]
       },
-      isLogin:false
+      isLogin: false
     };
+  },
+  created() {
+    this.getLoginData()   //请求数据
   },
   methods: {
     submitForm(formName) {
 
       this.$message.success("登录成功!!!");
-      this.$router.push({path: "/"});
+      this.$router.push({ path: "/" });
     },
     /* resetForm(formName) {
       this.$refs[formName].resetFields();
     } */
+
+    // 网络请求方法
+    getLoginData() {
+      getLogindata().then(res => {
+        console.log(res); //404 Not Found 请求失败，请求所希望得到的资源未被在服务器上发现
+
+
+      }).catch(reason=>{
+        console.log(reason);
+      })
+    }
   }
-  }
+
+}
 </script>
 
 <style scoped>
-  body{
-    margin: 0;
-    padding: 0;
-  }
-  #login-container{
-    width: 400px;
-    height: 300px;
-    background: rgba(255,255,255,.3);
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-left: -220px;
-    margin-top: -170px;
-    border-radius: 5px;
-    padding-top: 40px;
-    padding-right: 40px;
-  }
-  .login-header{
-    height: 50px;
-    text-align: center;
-    /* color: #fff; */
-    font-size: 20px;
-  }
-  .login-btn{
-    width: 100%;
-  }
-  .login-tips{
-    display: flex;
-    justify-content: space-between;
-    list-style: none;
-  }
-  .login-tips li:first-child{
-    /* text-align: left; */
-    margin-left: -40px;
-  }
-  .login-tips li a{
-    color: #000;
-    text-decoration: none;
-  }
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#login-container {
+  width: 400px;
+  height: 300px;
+  background: rgba(255, 255, 255, .3);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -220px;
+  margin-top: -170px;
+  border-radius: 5px;
+  padding-top: 40px;
+  padding-right: 40px;
+}
+
+.login-header {
+  height: 50px;
+  text-align: center;
+  /* color: #fff; */
+  font-size: 20px;
+}
+
+.login-btn {
+  width: 100%;
+}
+
+.login-tips {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+}
+
+.login-tips li:first-child {
+  /* text-align: left; */
+  margin-left: -40px;
+}
+
+.login-tips li a {
+  color: #000;
+  text-decoration: none;
+}
 </style>

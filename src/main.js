@@ -10,6 +10,14 @@ Vue.use(ElementUI)
 import VueParticles from 'vue-particles'
 Vue.use(VueParticles)
 
+/* router.beforeEach((to,from,next)=>{
+  if(to.matched.length!=0){
+    if(to.meta.requireAuth){
+
+    }
+  }
+}) */
+
 Vue.config.productionTip = false
 
 new Vue({
