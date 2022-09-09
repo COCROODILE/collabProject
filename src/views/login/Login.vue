@@ -3,20 +3,22 @@
     <div class="login-header">
       知新点点
     </div>
-    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-      <el-form-item label="账号" prop="user">
-        <el-input type="text" v-model="ruleForm.user" autocomplete="off"></el-input>
+    <el-form :model="loginForm" status-icon :rules="loginFormRules" ref="loginFormRef" label-width="0px"
+      class="login_form">
+      <!-- 账号 -->
+      <el-form-item prop="username">
+        <!-- v-model:双向绑定数据 -->
+        <el-input v-model="loginForm.username" prefix-icon="iconfont icon-user"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="pass">
-        <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+      <!-- 密码 -->
+      <el-form-item prop="password">
+        <el-input v-model="loginForm.password" prefix-icon="iconfont icon-3702mima" type="password"></el-input>
       </el-form-item>
-      <el-form-item label="验证码">
+      <!-- <el-form-item label="验证码">
         <el-input type="text" autocomplete="off"></el-input><img src="" alt="">
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
-        <!-- <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-        <el-button @click="resetForm('ruleForm')">重置</el-button> -->
-        <el-button class="login-btn" type="primary" @click="submitForm('ruleForm')">登录</el-button>
+        <el-button class="login-btn" type="primary" @click="login">登录</el-button>
       </el-form-item>
 
       <el-form-item>
@@ -31,71 +33,49 @@
 </template>
 
 <script>
-import { getLogindata } from '@/network/login'
 export default {
-  name: "login",
-  components: {
-  },
+  name: "Login",
   data() {
-    var validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入账户'));
-      } else {
-        if (this.ruleForm.pass !== '') {
-          this.$refs.ruleForm.validateField('pass');
-        }
-        callback();
-      }
-    };
-    var validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
-      } else {
-        callback();
-      }
-    };
     return {
-      ruleForm: {
-        user: '',
-        pass: '',
+      loginForm: {
+        username: '',
+        password: ''
       },
-      rules: {
-        user: [
-          { validator: validatePass, trigger: 'blur' }
+      loginFormRules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
         ],
-        pass: [
-          { validator: validatePass2, trigger: 'blur' }
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
         ],
-        // age: [
-        //   { validator: checkAge, trigger: 'blur' }
-        // ]
-      },
-      isLogin: false
+      }
     };
-  },
-  created() {
-    this.getLoginData()   //请求数据
   },
   methods: {
-    submitForm(formName) {
-
-      this.$message.success("登录成功!!!");
-      this.$router.push({ path: "/" });
-    },
-    /* resetForm(formName) {
-      this.$refs[formName].resetFields();
-    } */
-
-    // 网络请求方法
-    getLoginData() {
-      getLogindata().then(res => {
-        console.log(res); //404 Not Found 请求失败，请求所希望得到的资源未被在服务器上发现
-
-
-      }).catch(reason=>{
-        console.log(reason);
+    // 登录
+    login() {
+      // 在请求前对用户的数据进行验证
+      this.$refs.loginFormRef.validate(async valid => {
+        // console.log(valid);   //判断数据是否符合格式
+        if (!valid) return;  //如果valid=false 不发起请求
+        const data = await this.$http.post('/doLogin')
+        console.log(data);
+        // const {data:res}=  await this.$http.post('login',this.loginForm)
+        // console.log(res); 通过解构赋值的方式拿到promise对象中的具体数据
+        /* if (res.meta.status !== 200) {
+          return this.$message.error('登录失败');
+        }
+        this.$message.success('登录成功')
+        console.log(res);
+        // 将登录成功之后的token，保存到客户端的sessionStorage中
+        window.sessionStorage.setItem('token', res.data.token)
+        // 跳转到后台主页，路由地址是/home
+        this.$router.push('/home') */
       })
-    }
+    },
+
   }
 
 }
@@ -119,6 +99,12 @@ body {
   border-radius: 5px;
   padding-top: 40px;
   padding-right: 40px;
+}
+
+.login_form {
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .login-header {

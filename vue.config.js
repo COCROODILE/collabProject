@@ -1,7 +1,7 @@
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
   transpileDependencies: true,
-  devServer: {
+  /* devServer: {
       // 跨域
       proxy: {
     // 只要axios请求中带有/api的url,就会触发代理机制
@@ -16,7 +16,7 @@ module.exports = defineConfig({
         }
        }
       },
-    },
+    }, */
 })
 
 
