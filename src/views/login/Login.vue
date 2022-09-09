@@ -57,12 +57,15 @@ export default {
     // 登录
     login() {
       // 在请求前对用户的数据进行验证
-      this.$refs.loginFormRef.validate(async valid => {
+      this.$refs.loginFormRef.validate( valid => {
         // console.log(valid);   //判断数据是否符合格式
         if (!valid) return;  //如果valid=false 不发起请求
-        const data = await this.$http.post('/doLogin')
-        console.log(data);
-        // const {data:res}=  await this.$http.post('login',this.loginForm)
+        this.$http.post('/doLogin?username='+this.loginForm.username+'&password='+this.loginForm.password).then(res=>{
+          console.log(res);
+        })
+        
+        /* const data=this.$http.post('/doLogin',this.loginForm)
+        console.log(data); */
         // console.log(res); 通过解构赋值的方式拿到promise对象中的具体数据
         /* if (res.meta.status !== 200) {
           return this.$message.error('登录失败');
